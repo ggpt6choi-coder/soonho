@@ -11,35 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const START_DATE = new Date('2026-05-30T21:00:00+09:00');
   const TOTAL_DURATION = TARGET_DATE - START_DATE;
 
-  // --- Theme Configuration ---
-  const themeButtons = document.querySelectorAll('.theme-btn');
-  
-  // Load saved theme or default to 'rose'
-  const savedTheme = localStorage.getItem('soonho-wedding-theme') || 'rose';
-  setTheme(savedTheme);
-
-  themeButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const themeVal = btn.getAttribute('data-theme-val');
-      setTheme(themeVal);
-      // Spawn a theme change celebrate burst
-      createCelebrationBurst(window.innerWidth / 2, window.innerHeight / 2);
-    });
-  });
-
-  function setTheme(themeName) {
-    document.body.setAttribute('data-theme', themeName);
-    localStorage.setItem('soonho-wedding-theme', themeName);
-    
-    // Update active button state
-    themeButtons.forEach(btn => {
-      if (btn.getAttribute('data-theme-val') === themeName) {
-        btn.classList.add('active');
-      } else {
-        btn.classList.remove('active');
-      }
-    });
-  }
 
   // --- Countdown and Precision Progress Engine ---
   const ddayDisplay = document.getElementById('dday-display');
@@ -239,8 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Avoid spawning when clicking interactive UI elements (buttons, inputs)
     if (e.target.tagName !== 'BUTTON' && 
         e.target.tagName !== 'INPUT' && 
-        e.target.tagName !== 'TEXTAREA' && 
-        !e.target.closest('.theme-buttons')) {
+        e.target.tagName !== 'TEXTAREA') {
       for (let i = 0; i < 5; i++) {
         particles.push(new HeartParticle(e.clientX, e.clientY, true));
       }

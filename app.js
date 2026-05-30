@@ -255,16 +255,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnY = rect.top + rect.height / 2;
     
     createCelebrationBurst(btnX, btnY);
-    triggerAudioChimeMelody();
+    
+    initAudio();
+    if (audioCtx) {
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      const randomFreq = scale[Math.floor(Math.random() * scale.length)];
+      playChimeNote(randomFreq);
+    }
   });
 
-  // --- Web Audio API Romantic Ambient Chimes Synthesizer ---
+  // --- Web Audio API Chime Synth ---
   let audioCtx = null;
-  let isAudioPlaying = false;
-  let ambientMelodyInterval = null;
-  const audioToggleBtn = document.getElementById('audio-toggle');
-  const audioIcon = audioToggleBtn.querySelector('.audio-icon');
-  const audioText = audioToggleBtn.querySelector('.audio-text');
 
   // Major pentatonic scale notes (frequencies in Hz)
   const scale = [
@@ -280,9 +283,6 @@ document.addEventListener('DOMContentLoaded', () => {
     880.00  // A5
   ];
 
-  // Ambient chord base frequencies
-  const chordRoots = [130.81, 110.00, 87.31, 98.00]; // C3, A2, F2, G2
-
   function initAudio() {
     if (audioCtx) return;
     const AudioContextClass = window.AudioContext || window.webkitAudioContext;
@@ -291,10 +291,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function playChimeNote(freq) {
     if (!audioCtx) return;
-    if (audioCtx.state === 'suspended') {
-      audioCtx.resume();
-    }
-
     const now = audioCtx.currentTime;
     
     // Create nodes
@@ -344,99 +340,60 @@ document.addEventListener('DOMContentLoaded', () => {
     osc2.stop(now + 3.5);
   }
 
-  function playBaseChord(rootFreq) {
-    if (!audioCtx) return;
-    const now = audioCtx.currentTime;
-    
-    // Play warm sine waves at root and perfect fifth
-    [rootFreq, rootFreq * 1.5, rootFreq * 2.0].forEach(f => {
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(f, now);
-      
-      gain.gain.setValueAtTime(0, now);
-      gain.gain.linearRampToValueAtTime(0.04, now + 1.0); // Extremely slow attack
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 6.0); // Smooth long decay
-      
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      
-      osc.start(now);
-      osc.stop(now + 6.5);
-    });
+  // --- Share Button Functionality ---
+  const shareBtn = document.getElementById('share-btn');
+  const toast = document.getElementById('toast');
+
+  function showToast(message) {
+    toast.textContent = message;
+    toast.classList.add('show');
+    setTimeout(() => {
+      toast.classList.remove('show');
+    }, 2500);
   }
 
-  function triggerAudioChimeMelody() {
-    if (!audioCtx || isAudioPlaying === false) return;
-    
-    // Choose a random note from pentatonic scale and play it
-    const randomFreq = scale[Math.floor(Math.random() * scale.length)];
-    playChimeNote(randomFreq);
-  }
+  shareBtn.addEventListener('click', async () => {
+    const shareData = {
+      title: '순호의 유부남 전직 카운트다운',
+      text: '2027년 7월 10일, 순호의 유부남 전직 퀘스트 완료까지 남은 시간!',
+      url: window.location.href
+    };
 
-  let chordIndex = 0;
-  function startAmbientSequencer() {
-    if (ambientMelodyInterval) clearInterval(ambientMelodyInterval);
-    
-    let tickCount = 0;
-    
-    // Play first chord instantly
-    playBaseChord(chordRoots[chordIndex]);
-
-    ambientMelodyInterval = setInterval(() => {
-      if (!isAudioPlaying) return;
-      
-      // Play a soft chord root pad every 8 ticks (approx 16 seconds)
-      if (tickCount % 8 === 0) {
-        chordIndex = (chordIndex + 1) % chordRoots.length;
-        playBaseChord(chordRoots[chordIndex]);
-      }
-      
-      // Random chance to play a melody chime (60% chance every 2 seconds)
-      if (Math.random() < 0.6) {
-        triggerAudioChimeMelody();
-      }
-      
-      tickCount++;
-    }, 2000);
-  }
-
-  function toggleAudio() {
-    initAudio();
-    
-    if (isAudioPlaying) {
-      // Pause
-      isAudioPlaying = false;
-      audioIcon.textContent = '🔇';
-      audioText.textContent = '음악 켜기';
-      if (ambientMelodyInterval) {
-        clearInterval(ambientMelodyInterval);
-        ambientMelodyInterval = null;
+    if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        if (err.name !== 'AbortError') {
+          copyToClipboard();
+        }
       }
     } else {
-      // Play
-      isAudioPlaying = true;
-      audioIcon.textContent = '🎵';
-      audioText.textContent = '음악 끄기';
-      
-      // Resume context if suspended
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-      
-      startAmbientSequencer();
-      // Play an initial chime to acknowledge action
-      playChimeNote(scale[4]);
+      copyToClipboard();
     }
+  });
+
+  function copyToClipboard() {
+    navigator.clipboard.writeText(window.location.href)
+      .then(() => {
+        showToast('공유 링크가 클립보드에 복사되었습니다! 🔗');
+      })
+      .catch(err => {
+        // Fallback for older browsers
+        const tempInput = document.createElement('input');
+        tempInput.value = window.location.href;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        try {
+          document.execCommand('copy');
+          showToast('공유 링크가 클립보드에 복사되었습니다! 🔗');
+        } catch (e) {
+          showToast('링크 복사에 실패했습니다. 주소를 직접 복사해주세요.');
+        }
+        document.body.removeChild(tempInput);
+      });
   }
 
-  // Audio button toggle listener
-  audioToggleBtn.addEventListener('click', toggleAudio);
-  
-  // Default audio state: starts unplayed because of browser policies.
-  // The first time a user interacts (taps somewhere), we can warm up the context.
+  // Warm up audio context on first user interaction
   document.body.addEventListener('click', () => {
     initAudio();
   }, { once: true });

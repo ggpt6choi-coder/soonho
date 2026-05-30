@@ -155,15 +155,15 @@ body {
   padding-bottom: 2rem;
 }
 
-/* --- Ambient Audio Controls --- */
-.audio-controls {
+/* --- Share Controls --- */
+.share-controls {
   position: absolute;
   top: 1.25rem;
   right: 1.25rem;
   z-index: 99;
 }
 
-.audio-btn {
+.share-btn {
   background: var(--card-bg);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -182,12 +182,36 @@ body {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.audio-btn:hover {
+.share-btn:hover {
   transform: translateY(-2px);
 }
 
-.audio-btn:active {
+.share-btn:active {
   transform: translateY(0);
+}
+
+/* --- Toast Notification --- */
+.toast-notification {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--primary);
+  color: #ffffff;
+  padding: 0.8rem 1.5rem;
+  border-radius: 30px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  box-shadow: 0 10px 25px var(--shadow);
+  z-index: 10000;
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease;
+}
+
+.toast-notification.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
 }
 
 /* --- Hero Cover Section --- */

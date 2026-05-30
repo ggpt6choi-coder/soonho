@@ -26,11 +26,11 @@
   <!-- Interactive Particles Canvas -->
   <canvas id="particle-canvas"></canvas>
 
-  <!-- Ambient Audio Controls -->
-  <div class="audio-controls">
-    <button id="audio-toggle" class="audio-btn" aria-label="Toggle Ambient Music" title="배경 음악 토글">
-      <span class="audio-icon">🎵</span>
-      <span class="audio-text">음악 끄기</span>
+  <!-- Share Controls -->
+  <div class="share-controls">
+    <button id="share-btn" class="share-btn" aria-label="Share App" title="공유하기">
+      <span class="share-icon">🔗</span>
+      <span class="share-text">공유하기</span>
     </button>
   </div>
 
@@ -134,6 +134,9 @@
 
     </div>
   </main>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast-notification" aria-live="polite"></div>
 
   <!-- Core Application Scripts -->
   <script src="app.js"></script>

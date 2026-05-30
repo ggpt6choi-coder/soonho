@@ -1,0 +1,574 @@
+/* ==========================================================================
+   Soonho's Wedding D-Day App - Stylesheet
+   ========================================================================== */
+
+/* --- Design Tokens & Color Themes --- */
+:root {
+  /* Default Rose Theme */
+  --rose-primary: hsl(345, 80%, 60%);
+  --rose-primary-light: hsl(345, 90%, 95%);
+  --rose-bg: hsl(345, 30%, 98%);
+  --rose-card-bg: rgba(255, 255, 255, 0.75);
+  --rose-text: hsl(345, 40%, 15%);
+  --rose-text-muted: hsl(345, 15%, 45%);
+  --rose-accent: hsl(12, 85%, 65%);
+  --rose-glass-border: rgba(255, 182, 193, 0.35);
+  --rose-shadow: rgba(220, 20, 60, 0.08);
+
+  /* Gold Theme */
+  --gold-primary: hsl(38, 70%, 46%);
+  --gold-primary-light: hsl(38, 60%, 96%);
+  --gold-bg: hsl(38, 30%, 98%);
+  --gold-card-bg: rgba(255, 255, 255, 0.78);
+  --gold-text: hsl(38, 45%, 15%);
+  --gold-text-muted: hsl(38, 15%, 42%);
+  --gold-accent: hsl(24, 65%, 52%);
+  --gold-glass-border: rgba(212, 175, 55, 0.28);
+  --gold-shadow: rgba(184, 134, 11, 0.06);
+
+  /* Emerald Theme */
+  --emerald-primary: hsl(158, 65%, 32%);
+  --emerald-primary-light: hsl(158, 40%, 95%);
+  --emerald-bg: hsl(158, 20%, 98%);
+  --emerald-card-bg: rgba(255, 255, 255, 0.78);
+  --emerald-text: hsl(158, 45%, 12%);
+  --emerald-text-muted: hsl(158, 15%, 40%);
+  --emerald-accent: hsl(42, 80%, 55%);
+  --emerald-glass-border: rgba(46, 139, 87, 0.22);
+  --emerald-shadow: rgba(46, 139, 87, 0.06);
+
+  /* Midnight (Dark Mode) Theme */
+  --midnight-primary: hsl(220, 75%, 65%);
+  --midnight-primary-light: hsl(220, 60%, 18%);
+  --midnight-bg: hsl(220, 50%, 6%);
+  --midnight-card-bg: rgba(15, 23, 42, 0.65);
+  --midnight-text: hsl(210, 40%, 95%);
+  --midnight-text-muted: hsl(215, 20%, 65%);
+  --midnight-accent: hsl(330, 80%, 65%);
+  --midnight-glass-border: rgba(255, 255, 255, 0.08);
+  --midnight-shadow: rgba(0, 0, 0, 0.35);
+
+  /* Fallback values initialized to Rose */
+  --primary: var(--rose-primary);
+  --primary-light: var(--rose-primary-light);
+  --bg: var(--rose-bg);
+  --card-bg: var(--rose-card-bg);
+  --text: var(--rose-text);
+  --text-muted: var(--rose-text-muted);
+  --accent: var(--rose-accent);
+  --glass-border: var(--rose-glass-border);
+  --shadow: var(--rose-shadow);
+}
+
+/* --- Active Theme Setters via body[data-theme] --- */
+body[data-theme="rose"] {
+  --primary: var(--rose-primary);
+  --primary-light: var(--rose-primary-light);
+  --bg: var(--rose-bg);
+  --card-bg: var(--rose-card-bg);
+  --text: var(--rose-text);
+  --text-muted: var(--rose-text-muted);
+  --accent: var(--rose-accent);
+  --glass-border: var(--rose-glass-border);
+  --shadow: var(--rose-shadow);
+}
+
+body[data-theme="gold"] {
+  --primary: var(--gold-primary);
+  --primary-light: var(--gold-primary-light);
+  --bg: var(--gold-bg);
+  --card-bg: var(--gold-card-bg);
+  --text: var(--gold-text);
+  --text-muted: var(--gold-text-muted);
+  --accent: var(--gold-accent);
+  --glass-border: var(--gold-glass-border);
+  --shadow: var(--gold-shadow);
+}
+
+body[data-theme="emerald"] {
+  --primary: var(--emerald-primary);
+  --primary-light: var(--emerald-primary-light);
+  --bg: var(--emerald-bg);
+  --card-bg: var(--emerald-card-bg);
+  --text: var(--emerald-text);
+  --text-muted: var(--emerald-text-muted);
+  --accent: var(--emerald-accent);
+  --glass-border: var(--emerald-glass-border);
+  --shadow: var(--emerald-shadow);
+}
+
+body[data-theme="midnight"] {
+  --primary: var(--midnight-primary);
+  --primary-light: var(--midnight-primary-light);
+  --bg: var(--midnight-bg);
+  --card-bg: var(--midnight-card-bg);
+  --text: var(--midnight-text);
+  --text-muted: var(--midnight-text-muted);
+  --accent: var(--midnight-accent);
+  --glass-border: var(--midnight-glass-border);
+  --shadow: var(--midnight-shadow);
+}
+
+/* --- Base & Reset Styles --- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100%;
+  overflow-x: hidden;
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  scroll-behavior: smooth;
+}
+
+body {
+  background: radial-gradient(circle at top, var(--primary-light), var(--bg));
+  color: var(--text);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  transition: background 0.6s ease, color 0.6s ease;
+  min-height: 100vh;
+}
+
+/* --- Desktop Mock Container Frame --- */
+.phone-frame {
+  width: 100%;
+  max-width: 480px;
+  min-height: 100vh;
+  background: var(--bg);
+  box-shadow: 0 25px 80px var(--shadow);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: background-color 0.6s ease, box-shadow 0.6s ease;
+}
+
+.phone-content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  padding-bottom: 2rem;
+}
+
+/* --- Ambient Audio Controls --- */
+.audio-controls {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  z-index: 99;
+}
+
+.audio-btn {
+  background: var(--card-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  padding: 0.5rem 0.8rem;
+  border-radius: 24px;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  box-shadow: 0 4px 15px var(--shadow);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.audio-btn:hover {
+  transform: translateY(-2px);
+}
+
+.audio-btn:active {
+  transform: translateY(0);
+}
+
+/* --- Hero Cover Section --- */
+.hero-section {
+  position: relative;
+  height: 340px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.hero-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.02);
+  transition: transform 0.8s ease;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.2) 0%,
+    rgba(0, 0, 0, 0.4) 60%,
+    var(--bg) 100%
+  );
+  transition: background 0.6s ease;
+}
+
+.hero-text {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 0;
+  right: 0;
+  text-align: center;
+  padding: 0 1.5rem;
+}
+
+.wedding-badge {
+  display: inline-block;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 0.5rem;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+.wedding-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 0.25rem;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  font-style: italic;
+}
+
+.wedding-date {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
+}
+
+/* --- D-Day Display & Counter Grid --- */
+.counter-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem 0;
+}
+
+.dday-display {
+  font-family: 'Playfair Display', serif;
+  font-size: 4rem;
+  font-weight: 700;
+  color: var(--primary);
+  letter-spacing: -2px;
+  margin-bottom: 0.75rem;
+  animation: heartbeat 2.5s infinite ease-in-out;
+  transition: color 0.6s ease;
+}
+
+.countdown-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0 1.5rem;
+}
+
+.countdown-card {
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 1.1rem 0.5rem;
+  text-align: center;
+  box-shadow: 0 10px 25px var(--shadow);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+              border-color 0.6s ease, 
+              background-color 0.6s ease, 
+              box-shadow 0.6s ease;
+}
+
+.countdown-card:hover {
+  transform: translateY(-4px);
+}
+
+.card-number {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--primary);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+  transition: color 0.6s ease;
+}
+
+.card-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  margin-top: 0.35rem;
+  transition: color 0.6s ease;
+}
+
+/* --- Interactive Progress Section --- */
+.progress-section {
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  margin: 1.5rem 1.5rem 0.75rem 1.5rem;
+  padding: 1.5rem;
+  box-shadow: 0 10px 25px var(--shadow);
+  transition: all 0.6s ease;
+}
+
+.section-title {
+  font-family: 'Playfair Display', 'Noto Sans KR', serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 1rem;
+  text-align: center;
+  transition: color 0.6s ease;
+}
+
+.progress-bar-container {
+  padding: 0.5rem 0;
+}
+
+.progress-track {
+  background: var(--primary-light);
+  height: 8px;
+  border-radius: 6px;
+  position: relative;
+  transition: background-color 0.6s ease;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  border-radius: 6px;
+  width: 0%; /* Dynamic update in app.js */
+  transition: width 0.1s linear;
+}
+
+.progress-heart {
+  position: absolute;
+  top: 50%;
+  left: 0%; /* Dynamic update in app.js */
+  transform: translate(-50%, -50%);
+  font-size: 1.25rem;
+  cursor: pointer;
+  user-select: none;
+  animation: floatHeart 1.5s infinite alternate ease-in-out;
+  transition: left 0.1s linear;
+}
+
+.progress-stats {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.65rem;
+  transition: color 0.6s ease;
+}
+
+.precision-percentage {
+  font-family: 'Inter', monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--primary);
+  transition: color 0.6s ease;
+}
+
+.progress-info-text {
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.75rem;
+  line-height: 1.5;
+  transition: color 0.6s ease;
+}
+
+/* --- Theme Selection Section --- */
+.theme-section {
+  margin: 0.75rem 1.5rem;
+}
+
+.theme-buttons {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding: 0.25rem 0.25rem 0.5rem 0.25rem;
+  scrollbar-width: none; /* Hide scrollbar for clean visual */
+}
+
+.theme-buttons::-webkit-scrollbar {
+  display: none;
+}
+
+.theme-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 0.9rem;
+  border-radius: 24px;
+  border: 1px solid var(--glass-border);
+  background: var(--card-bg);
+  color: var(--text);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 4px 10px var(--shadow);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.theme-btn:hover {
+  transform: translateY(-2px);
+}
+
+.theme-btn.active {
+  background: var(--primary);
+  color: #ffffff;
+  border-color: var(--primary);
+  box-shadow: 0 6px 15px var(--shadow);
+}
+
+.theme-color-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.6);
+  display: inline-block;
+}
+
+/* --- Celebrate Button Section --- */
+.celebrate-section {
+  margin: 0.75rem 1.5rem;
+}
+
+.celebrate-button {
+  width: 100%;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: #ffffff;
+  border: none;
+  padding: 1.1rem;
+  border-radius: 18px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 8px 20px var(--shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
+              box-shadow 0.3s ease;
+}
+
+.celebrate-button:hover {
+  box-shadow: 0 12px 25px var(--shadow);
+}
+
+.celebrate-button:active {
+  transform: scale(0.97);
+}
+
+.btn-emoji {
+  font-size: 1.2rem;
+  display: inline-block;
+  animation: wobbleEmoji 2s infinite ease-in-out;
+}
+
+/* --- App Footer --- */
+.app-footer {
+  text-align: center;
+  padding: 2rem 1.5rem 1rem 1.5rem;
+  margin-top: auto;
+}
+
+.copyright {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+  margin-bottom: 0.25rem;
+  transition: color 0.6s ease;
+}
+
+.made-by {
+  font-size: 0.65rem;
+  color: var(--primary);
+  font-weight: 700;
+  opacity: 0.7;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: color 0.6s ease;
+}
+
+/* --- Particle Canvas --- */
+#particle-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+/* ==========================================================================
+   Animations & Keyframes
+   ========================================================================== */
+
+@keyframes heartbeat {
+  0% { transform: scale(1); }
+  14% { transform: scale(1.05); }
+  28% { transform: scale(1); }
+  42% { transform: scale(1.05); }
+  70% { transform: scale(1); }
+}
+
+@keyframes floatHeart {
+  0% { transform: translate(-50%, -50%) translateY(0) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) translateY(-5px) rotate(5deg); }
+}
+
+@keyframes cardSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes wobbleEmoji {
+  0%, 100% { transform: rotate(0); }
+  20% { transform: rotate(-8deg); }
+  40% { transform: rotate(8deg); }
+  60% { transform: rotate(-5deg); }
+  80% { transform: rotate(5deg); }
+}

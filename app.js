@@ -352,24 +352,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 2500);
   }
 
-  shareBtn.addEventListener('click', async () => {
-    const shareData = {
-      title: '순호의 유부남 전직 카운트다운',
-      text: '2027년 7월 10일, 순호의 유부남 전직 퀘스트 완료까지 남은 시간!',
-      url: window.location.href
-    };
-
-    if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
-      try {
-        await navigator.share(shareData);
-      } catch (err) {
-        if (err.name !== 'AbortError') {
-          copyToClipboard();
-        }
-      }
-    } else {
-      copyToClipboard();
-    }
+  shareBtn.addEventListener('click', () => {
+    copyToClipboard();
   });
 
   function copyToClipboard() {
